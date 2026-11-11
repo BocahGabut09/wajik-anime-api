@@ -13,13 +13,17 @@ export default async function getHTML(
   const url = new URL(pathname, baseUrl);
   const headers: Record<string, string> = {
     "User-Agent": userAgent,
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9,id;q=0.8",
+    "Referer": baseUrl,
+    "Cache-Control": "no-cache",
   };
 
   if (ref) {
-    headers.Refferer = ref.startsWith("http") ? ref : new URL(ref, baseUrl).toString();
+    headers["Referer"] = ref.startsWith("http") ? ref : new URL(ref, baseUrl).toString();
   }
 
-  const response = await fetch(url, { headers, redirect: "manual" });
+  const response = await fetch(url, { headers, redirect: "follow" });
 
   if (!response.ok) {
     response.status > 399 ? errorinCuy(response.status) : errorinCuy(404);
@@ -32,48 +36,7 @@ export default async function getHTML(
   if (sanitize) {
     return sanitizeHtml(html, {
       allowedTags: [
-        "address",
-        "article",
-        "aside",
-        "footer",
-        "header",
-        "h1",
-        "h2",
-        "h3",
-        "h4",
-        "h5",
-        "h6",
-        "main",
-        "nav",
-        "section",
-        "blockquote",
-        "div",
-        "dl",
-        "figcaption",
-        "figure",
-        "hr",
-        "li",
-        "main",
-        "ol",
-        "p",
-        "pre",
-        "ul",
-        "a",
-        "abbr",
-        "b",
-        "br",
-        "code",
-        "data",
-        "em",
-        "i",
-        "mark",
-        "span",
-        "strong",
-        "sub",
-        "sup",
-        "time",
-        "u",
-        "img",
+        "address","article","aside","footer","header","h1","h2","h3","h4","h5","h6","main","nav","section","blockquote","div","dl","figcaption","figure","hr","li","main","ol","p","pre","ul","a","abbr","b","br","code","data","em","i","mark","span","strong","sub","sup","time","u","img",
       ],
       allowedAttributes: {
         a: ["href", "name", "target"],
